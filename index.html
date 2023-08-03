@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online CC</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap");
+      * {
+        font-family: "Poppins", sans-serif;
+        font-size: 40px;
+      }
+      body {
+        background-color: royalblue;
+      }
+    </style>
+    <script>
+      function Exchange() {
+        event.preventDefault();
+        let amt = document.getElementById("amt");
+        let ans = document.getElementById("ans");
+        if (amt.value == "") {
+          alert("input is empty");
+          ans.innerHTML = "";
+          amt.focus();
+          return;
+        }
+        if (amt.value < 0.0) {
+          alert("No negative amount");
+          ans.innerHTML = "";
+          amt.focus();
+          return;
+        }
+        let aid = parseFloat(amt.value);
+        let url = "https://api.exchangerate-api.com/v4/latest/USD";
+        let dollar = 0.0;
+        fetch(url)
+          .then((res) => res.json())
+          .then((data) => {
+            dollar = data.rates.INR;
+            let air = aid * dollar;
+            let msg = "\u20B9" + air.toFixed(2);
+            ans.innerHTML = msg;
+          })
+          .catch((err) => {
+            ans.innerHTML = "issue " + err;
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <center>
+      <h1>Online CC</h1>
+      <form onsubmit="Exchange()">
+        <input
+          type="number"
+          id="amt"
+          step="any"
+          placeholder="Enter the amount in $"
+        />
+        <br /><br />
+        <input type="submit" value="Exchange" />
+        <h1 id="ans"></h1>
+      </form>
+    </center>
+  </body>
+</html>
